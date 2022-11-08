@@ -1,0 +1,102 @@
+<app-header></app-header>
+<div class="card p-2">
+    <div class="flex-container">
+        <div class="float-left">
+            <h4>Veículos</h4>
+        </div>
+        <div class="btns-header">
+            <button type="button" (click)="paginaInicial()" class="p-button-info" pButton icon="pi pi-info-circle"
+              label="Pagina Inicial"></button>
+            {{ '' }}
+          </div>
+    </div>
+    <div class="ui-g">
+        <p-table #dt1 [value]="veiculos$" selectionMode="single" [(selection)]="veiculoSelecionado" dataKey="id"
+            styleClass="p-datatable-veiculos" [responsive]="true" [rows]="10" [paginator]="true" stateStorage="session"
+            stateKey="statedemo-session">
+            <ng-template pTemplate="header">
+                <tr class="bg-primary">
+                    <th pSortableColumn="nomeVeiculo">Nome Veículo <p-sortIcon field="nomeVeiculo"></p-sortIcon></th>
+                    <th pSortableColumn="marca">Marca <p-sortIcon field="marca"></p-sortIcon></th>
+                    <th pSortableColumn="ano">Ano Facricação <p-sortIcon field="ano"></p-sortIcon></th>
+                    <th pSortableColumn="cor">Cor <p-sortIcon field="cor"></p-sortIcon></th>
+                    <th pSortableColumn="descricao">Descrição <p-sortIcon field="descricao"></p-sortIcon></th>
+                    <th pSortableColumn="vendido">Vendido? <p-sortIcon field="vendido"></p-sortIcon></th>
+                </tr>
+                <tr>
+                    <th>
+                        <input pInputText type="text"
+                            (input)="dt1.filter($any($event.target)?.value, 'nomeVeiculo', 'contains')"
+                            [value]="$any(dt1.filters['nomeVeiculo'])?.value" placeholder="Busca por Nome Veiculo"
+                            class="p-column-filter">
+                    </th>
+                    <th>
+                        <input pInputText type="text"
+                            (input)="dt1.filter($any($event.target)?.value, 'marca', 'contains')"
+                            [value]="$any(dt1.filters['marca'])?.value" placeholder="Busca por Marca"
+                            class="p-column-filter">
+                    </th>
+                    <th>
+                        <input pInputText type="number"
+                            (input)="dt1.filter($any($event.target)?.value, 'ano', 'contains')"
+                            [value]="$any(dt1.filters['ano'])?.value"
+                            placeholder="Ex: ano" class="p-column-filter">
+                    </th>
+                    <th>
+                        <input pInputText type="text"
+                            (input)="dt1.filter($any($event.target)?.value, 'cor', 'contains')"
+                            [value]="$any(dt1.filters['cor'])?.value" placeholder="Busca por Cor"
+                            class="p-column-filter">
+                    </th>
+                    <th>
+                      <input pInputText type="text"
+                          (input)="dt1.filter($any($event.target)?.value, 'descricao', 'contains')"
+                          [value]="$any(dt1.filters['descricao'])?.value" placeholder="Busca por Descrição"
+                          class="p-column-filter">
+                  </th>
+                    <th>
+                        <input pInputText type="text"
+                            (input)="dt1.filter($any($event.target)?.value, 'vendido', 'contains')"
+                            [value]="$any(dt1.filters['vendido'])?.value" placeholder="Busca por Status"
+                            class="p-column-filter">
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-veiculo>
+                <tr [pSelectableRow]="veiculo">
+                    <td>
+                        <span class="p-column-title">nomeVeiculo</span>
+                        {{veiculo.nomeVeiculo}}
+                    </td>
+                    <td>
+                        <span class="p-column-title">Marca</span>
+                        <span class="image-text">{{veiculo.marca}}</span>
+                    </td>
+                    <td>
+                        <span class="p-column-title">Ano Fabricação</span>
+                        <span class="image-text">{{veiculo.ano}}</span>
+                    </td>
+                    <td>
+                        <span class="p-column-title">Cor</span>
+                        <span class="image-text">{{veiculo.cor}}</span>
+                    </td>
+                    <td>
+                        <span class="p-column-title">Descrição</span>
+                        <span
+                            [class]="'customer-badge statusProduto-' + veiculo.descricao">{{veiculo.descricao}}</span>
+                    </td>
+                    <td>
+                      <span class="p-column-title">Status</span>
+                      <span
+                          [class]="'customer-badge statusProduto-' + veiculo.vendido">{{veiculo.vendido}}</span>
+                  </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4">Buscando veículos...</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

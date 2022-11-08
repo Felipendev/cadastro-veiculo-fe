@@ -1,0 +1,172 @@
+<div class="card p-2">
+    <p-toolbar styleClass="p-mb-4 p-toolbar p-component">
+    <ng-template pTemplate="left">
+        <button pButton pRipple label="Novo" icon="pi pi-plus" class="p-element p-button-success mr-2 p-button mt-2"(click)="openNew()"></button>
+    </ng-template>
+
+    <ng-template pTemplate="right">
+        <button type="button" pButton class="p-button-info mr-2 mt-2" [routerLink]="['/search']">Buscar</button>
+        <button type="button" pButton class="p-button-warning mt-2" (click)="onRefresh()">Atualizar Página</button>
+    </ng-template>
+</p-toolbar>
+    <div class="flex-container">
+        <div class="float-left">
+            <h4>Veículos</h4>
+        </div>
+    </div>
+    <p-table #dt [value]="veiculos$" selectionMode="single" [(selection)]="veiculoSelecionado" dataKey="idVeiculo"
+        styleClass="p-datatable-veiculos" [rows]="10" [paginator]="true" [rowHover]="true" dataKey="idVeiculo"
+        currentPageReportTemplate="Visualizando {first} a {last} de {totalRecords} veículos" [showCurrentPageReport]="true" stateStorage="session"
+        stateKey="statedemo-session" [responsive]="true">
+        <ng-template pTemplate="header">
+            <tr class="">
+                <th pSortableColumn="nomeVeiculo">Nome Veículo <p-sortIcon field="nomeVeiculo"></p-sortIcon></th>
+                <th pSortableColumn="marca">Marca<p-sortIcon field="marca"></p-sortIcon></th>
+                <th pSortableColumn="ano">Ano <p-sortIcon field="ano"></p-sortIcon></th>
+                <th pSortableColumn="cor">Cor <p-sortIcon field="cor"></p-sortIcon></th>
+                <th pSortableColumn="descricao">Descrição <p-sortIcon field="descricao"></p-sortIcon></th>
+                <th pSortableColumn="vendido">Vendido? <p-sortIcon field="vendido"></p-sortIcon></th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-veiculo>
+            <tr [pSelectableRow]="veiculo">
+                <td>
+                    <span class="p-column-title">Nome Veículo</span>
+                    {{veiculo.nomeVeiculo}}
+                </td>
+                <td>
+                    <span class="p-column-title">Marca</span>
+                    <span class="image-text">{{veiculo.marca}}</span>
+                </td>
+                <td>
+                    <span class="p-column-title">Ano Fabricação</span>
+                    <span class="image-text">{{veiculo.ano}}</span>
+                </td>
+                <td>
+                    <span class="p-column-title">Cor</span>
+                    <span class="image-text">{{veiculo.cor}}</span>
+                </td>
+                <td>
+                    <span class="p-column-title">Descrição</span>
+                    <span class="image-text">{{veiculo.descricao}}</span>
+                </td>
+                <td>
+                    <span class="p-column-title">vendido</span>
+                    <span class="image-text">{{veiculo.vendido}}</span>
+                </td>
+                <td>
+                    <span class="float-right">
+                        <button class="btn btn-outline-warning mb-1 btn-sm" (click)="onEdit(veiculo.idVeiculo)">Atualizar</button>
+                        {{ '' }}
+                        <button class="btn btn-outline-danger mb-1 btn-sm" (click)="onDelete(veiculo)">Remover</button>
+                    </span>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="4">Buscando veículos...</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                Há um total de {{veiculos$ ? veiculos$.length : 0 }} veículos.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+<!-- Modal -->
+<p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Novo Veículo" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+    <form (ngSubmit)="criaVeiculo()" class="p-fluid form-group" novalidate [formGroup]="form">
+
+        <div class="grupo form-group">
+            <label for="nomeVeiculo">Nome Veiculo</label>
+            <input
+                class="form-control" id="nomeVeiculo" name="nomeVeiculo" formControlName="nomeVeiculo" type="text" required
+                [ngClass]="{'is-invalid': submitted && hasError('nomeVeiculo')}"
+            >
+            <small class="invalid-feedback" *ngIf="hasError('nomeVeiculo') && hasError('nomeVeiculo')!['required']">
+                O campo Nome Veiculo precisa ser preenchido
+              </small>
+              <small class="invalid-feedback" *ngIf="hasError('nomeVeiculo') && hasError('nomeVeiculo')!['minlength']">
+                O campo Nome Veiculo precisa ter no mínino {{ hasError('nomeVeiculo')!['minlength'].requiredLength }} caracteres.
+              </small>
+              <small class="invalid-feedback" *ngIf="hasError('nomeVeiculo') && hasError('nomeVeiculo')!['maxlength']">
+                O campo Nome Veiculo deve ter no máximo {{ hasError('nomeVeiculo')!['maxlength'].requiredLength }} caracteres.
+              </small>
+        </div>
+
+        <div class="grupo form-group">
+            <label for="marca">Marca</label>
+            <select
+                class="form-control" name="marca" id="marca" formControlName="marca" required
+                [ngClass]="{'is-invalid': submitted && hasError('marca')}">
+                <option *ngFor="let marca of marcas">{{ marca }}<option>
+                </select>
+            <small class="invalid-feedback" *ngIf="hasError('marca') && hasError('marca')!['required']">
+                O campo marca precisa ser preenchido
+              </small>
+        </div>
+
+        <div class="grupo form-group">
+            <label for="cor">Cor</label>
+            <input
+                class="form-control" id="cor" type="text" formControlName="cor" name="cor" required
+                [ngClass]="{'is-invalid': submitted && hasError('cor')}"
+            >
+          <small class="invalid-feedback" *ngIf="hasError('cor') && hasError('cor')!['required']">
+            O campo cor precisa ser preenchido
+          </small>
+          <small class="invalid-feedback" *ngIf="hasError('cor') && hasError('cor')!['minlength']">
+            O campo cor precisa ter no mínino {{ hasError('cor')!['minlength'].requiredLength }} caracteres.
+          </small>
+          <small class="invalid-feedback" *ngIf="hasError('cor') && hasError('cor')!['maxlength']">
+            O campo cor deve ter no máximo {{ hasError('cor')!['maxlength'].requiredLength }} caracteres.
+          </small>
+        </div>
+
+        <div class="grupo form-group">
+          <label for="ano">Ano Fabricação:</label>
+          <input class="form-control" id="ano" type="number"
+            formControlName="ano" name="ano"
+            required [ngClass]="{'is-invalid': submitted && hasError('ano')}">
+            <small class="invalid-feedback" *ngIf="hasError('ano') && hasError('ano')!['required']">
+                  O Campo Ano precisa ser preenchido
+            </small>
+        </div>
+
+        <div class="grupo form-group">
+            <label for="descricao">Descrição</label>
+            <input class="form-control form-control" id="descricao" type="text" formControlName="descricao" name="descricao"
+                   required [ngClass]="{'is-invalid': submitted && hasError('descricao')}">
+            <small class="invalid-feedback" *ngIf="hasError('descricao') && hasError('descricao')!['required']">
+                O campo Descrição precisa ser preenchido
+            </small>
+            <small class="invalid-feedback" *ngIf="hasError('descricao') && hasError('descricao')!['minlength']">
+                O campo Descrição precisa ter no mínino {{ hasError('descricao')!['minlength'].requiredLength }} caracteres.
+            </small>
+        </div>
+        <div class="input-group mt-2">
+          <div class="input-group-prepend" >
+            <label class="input-group-text" for="inputGroupSelect01">Vendido?</label>
+          </div>
+          <select
+            class="custom-select" id="inputGroupSelect01"
+            formControlName="vendido" name="vendido"
+            required [ngClass]="{'is-invalid': submitted && hasError('vendido')}">
+          <option selected value="false">NÃO</option>
+          <option value="true">SIM</option>
+        </select>
+          <small class="invalid-feedback" *ngIf="hasError('vendido') && hasError('vendido')!['required']">
+            O campo Vendido? precisa ser preenchido
+        </small>
+        </div>
+        <button type="submit" class="btn btn-outline-primary m-2">Adicionar</button>
+        <button type="button" class="btn btn-outline-warning m-2"  (click)="cancelar()">Limpar</button>
+    </form>
+</ng-template>
+</p-dialog>
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [position]="position" [baseZIndex]="10000" header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

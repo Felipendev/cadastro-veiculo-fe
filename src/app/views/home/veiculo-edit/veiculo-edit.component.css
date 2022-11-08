@@ -1,0 +1,23 @@
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.btns-header {
+  justify-content: flex-end;
+
+}
+
+
+
+@media (max-width: 1180px) {
+    .grupo1, .grupo {
+      display: block;
+      width: 100%;
+      margin: 0 auto;
+    }
+  }
+

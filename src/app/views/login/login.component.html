@@ -1,0 +1,26 @@
+<div class="modal modal-signin d-block bg-info py-5" tabindex="-1" role="dialog" id="modalSignin">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-5 shadow justify-content-center">
+            <div class="modal-header p-5 pb-4 border-bottom-0">
+                <!-- <h5 class="modal-title">Modal title</h5> -->
+                <h2 class="fw-bold mb-0">Login</h2>
+            </div>
+            <div class="modal-body p-5 pt-0 ">
+                <div (ngSubmit)="onSubmit()" >
+                    <div class="form-floating-sm mb-3">
+                        <input type="text" class="form-control"  value="admin" id="login" placeholder="Login"
+                            required name="login">
+                    </div>
+                    <div class="form-floating-sm mb-3">
+                        <input type="password" class="form-control" id="password" value="admin" name="password"
+                            placeholder="Senha" required >
+                    </div>
+                    <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary"
+                        type="button" (click)="onSubmit()">Login</button>
+                    <small class="text-muted">Acesso Administrador </small>
+                    <hr class="my-4">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
